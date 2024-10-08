@@ -2,6 +2,9 @@ package com.example.sjpa.controller;
 
 import com.example.sjpa.entity.Student;
 import com.example.sjpa.service.StudentServiceImpl;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,4 +53,13 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<Student>> getStudentsByCity(@PathVariable String city) {
+    	city = city.replace("-", " ").replace("_", " ");
+        List<Student> students = studentService.findByCity(city);
+        return ResponseEntity.ok(students);
+    }
 }
+
+

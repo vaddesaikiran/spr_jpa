@@ -8,4 +8,5 @@ public interface StudentService {
     Student getStudentById(Long id);
     Student updateStudent(Long id, Student student);
     List<Student> getAllStudents();
+    List<Student> findByCity(String city);
 }

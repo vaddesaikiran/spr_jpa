@@ -2,6 +2,9 @@ package com.example.sjpa.service;
 
 import com.example.sjpa.entity.Student;
 import com.example.sjpa.repository.StudentRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +42,9 @@ public class StudentServiceImpl {
 
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+    
+    public List<Student> findByCity(String city) {
+        return studentRepository.findByAddress_City(city);
     }
 }
