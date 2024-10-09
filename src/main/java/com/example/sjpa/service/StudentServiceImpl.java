@@ -2,10 +2,10 @@ package com.example.sjpa.service;
 
 import com.example.sjpa.entity.Student;
 import com.example.sjpa.repository.StudentRepository;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,37 +14,11 @@ public class StudentServiceImpl {
     @Autowired
     private StudentRepository studentRepository;
 
-    public Student saveStudent(Student student) {
-        return studentRepository.save(student);
+    public Page<Student> getAllStudents(Pageable pageable) {
+        return studentRepository.findAll(pageable);
     }
 
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
-    }
-    
-    public Student updateStudent(Long id, Student updatedStudent) {
-        Student existingStudent = getStudentById(id);
-        if (existingStudent != null) {
-            existingStudent.setName(updatedStudent.getName());
-            existingStudent.setEmail(updatedStudent.getEmail());
-            existingStudent.setAddress(updatedStudent.getAddress());
-            return studentRepository.save(existingStudent);
-        } else {
-            return null;
-        }
-    }
-
-
-    public Iterable<Student> getAllStudents() {
-        return studentRepository.findAll();
-    }
-
-
-    public void deleteStudent(Long id) {
-        studentRepository.deleteById(id);
-    }
-    
-    public List<Student> findByCity(String city) {
-        return studentRepository.findByAddress_City(city);
+    public Iterable<Student> getAllStudentsSorted(Sort sort) {
+        return studentRepository.findAll(sort);
     }
 }

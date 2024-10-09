@@ -3,9 +3,10 @@ package com.example.sjpa.controller;
 import com.example.sjpa.entity.Student;
 import com.example.sjpa.service.StudentServiceImpl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,50 +17,43 @@ public class StudentController {
     @Autowired
     private StudentServiceImpl studentService;
 
-    @PostMapping("")
-    public ResponseEntity<Student> saveStudent(@RequestBody Student student) {
-        Student savedStudent = studentService.saveStudent(student);
-        return ResponseEntity.ok(savedStudent);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        Student student = studentService.getStudentById(id);
-        if (student != null) {
-            return ResponseEntity.ok(student);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student updatedStudent) {
-        Student existingStudent = studentService.updateStudent(id, updatedStudent);
-        if (existingStudent != null) {
-            return ResponseEntity.ok(existingStudent);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("")
-    public ResponseEntity<Iterable<Student>> getAllStudents() {
-        Iterable<Student> students = studentService.getAllStudents();
+    public ResponseEntity<Page<Student>> getAllStudents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Student> students = studentService.getAllStudents(PageRequest.of(page, size));
         return ResponseEntity.ok(students);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/city/{city}")
-    public ResponseEntity<List<Student>> getStudentsByCity(@PathVariable String city) {
-    	city = city.replace("-", " ").replace("_", " ");
-        List<Student> students = studentService.findByCity(city);
+    @GetMapping("/sorted")
+    public ResponseEntity<Iterable<Student>> getAllStudentsSorted(
+            @RequestParam(defaultValue = "name") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Iterable<Student> students = studentService.getAllStudentsSorted(sort);
         return ResponseEntity.ok(students);
     }
+    
+    
+    @GetMapping("/paged-sorted")
+    public ResponseEntity<Page<Student>> getAllStudentsPagedAndSorted(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Page<Student> students = studentService.getAllStudents(PageRequest.of(page, size, sort));
+        return ResponseEntity.ok(students);
+    }
+    
 }
 
 

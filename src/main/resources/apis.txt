@@ -1,0 +1,12 @@
+http://localhost:8080/students  --> default page
+
+http://localhost:8080/students?page=0&size=10
+
+
+http://localhost:8080/students/sorted  --> default sort
+
+http://localhost:8080/students/sorted?sortField=name&sortDirection=asc
+
+
+
+http://localhost:8080/students/paged-sorted?page=0&size=10&sortField=email&sortDirection=desc --> paging and sorting
