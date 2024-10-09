@@ -44,7 +44,16 @@ public class StudentServiceImpl {
         studentRepository.deleteById(id);
     }
     
-    public List<Student> findByCity(String city) {
-        return studentRepository.findByAddress_City(city);
+    public List<Student> getStudentsByEmailDomain(String domain) {
+        return studentRepository.findStudentsByEmailDomain(domain);
+    }
+    
+    public Student getTopStudentInCity(String city) {
+        List<Student> students = studentRepository.findTopStudentInCity(city);
+        return students.isEmpty() ? null : students.get(0);
+    }
+
+    public List<Student> getStudentsAbove90PercentFromEachCity() {
+        return studentRepository.findStudentsAbove90PercentFromEachCity();
     }
 }

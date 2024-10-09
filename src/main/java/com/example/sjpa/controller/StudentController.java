@@ -6,6 +6,7 @@ import com.example.sjpa.service.StudentServiceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,11 +55,27 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/city/{city}")
-    public ResponseEntity<List<Student>> getStudentsByCity(@PathVariable String city) {
-    	city = city.replace("-", " ").replace("_", " ");
-        List<Student> students = studentService.findByCity(city);
-        return ResponseEntity.ok(students);
+    
+    @GetMapping("/by-email-domain")
+    public ResponseEntity<List<Student>> getStudentsByEmailDomain(@RequestParam String domain) {
+        List<Student> students = studentService.getStudentsByEmailDomain(domain);
+        return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+    
+    @GetMapping("/top-in-city")
+    public ResponseEntity<Student> getTopStudentInCity(@RequestParam String city) {
+        Student topStudent = studentService.getTopStudentInCity(city);
+        return topStudent == null 
+            ? new ResponseEntity<>(HttpStatus.NOT_FOUND) 
+            : new ResponseEntity<>(topStudent, HttpStatus.OK);
+    }
+
+    @GetMapping("/above-90-percent-each-city")
+    public ResponseEntity<List<Student>> getStudentsAbove90PercentFromEachCity() {
+        List<Student> students = studentService.getStudentsAbove90PercentFromEachCity();
+        return students.isEmpty() 
+            ? new ResponseEntity<>(HttpStatus.NOT_FOUND) 
+            : new ResponseEntity<>(students, HttpStatus.OK);
     }
 }
 

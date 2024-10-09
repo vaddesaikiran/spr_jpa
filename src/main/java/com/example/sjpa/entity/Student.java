@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "students_details")
+@Table(name = "student")
 public class Student {
 
     @Id
@@ -22,6 +22,9 @@ public class Student {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+    
+    @Column(name = "percentage", nullable = false) // Add this line
+    private Double percentage;
 
     @Embedded
     private Address address;
@@ -59,5 +62,13 @@ public class Student {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+    
+    public Double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
     }
 }
