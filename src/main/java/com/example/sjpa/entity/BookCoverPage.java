@@ -26,4 +26,7 @@ public class BookCoverPage {
     public void setCoverImageUrl(String coverImageUrl) {
         this.coverImageUrl = coverImageUrl;
     }
+
 }
+
+

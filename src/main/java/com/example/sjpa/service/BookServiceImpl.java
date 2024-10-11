@@ -42,4 +42,11 @@ public class BookServiceImpl implements BookService{
         }
         return false;
     }
+    
+    public BookCoverPage getBookCoverPageById(Long id) {
+        return bookCoverPageRepository.findById(id).orElse(null);
+    }
+
+    
+    
 }

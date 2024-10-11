@@ -38,4 +38,5 @@ public class Book {
     public void setBookCoverPage(BookCoverPage bookCoverPage) {
         this.bookCoverPage = bookCoverPage;
     }
+    
 }

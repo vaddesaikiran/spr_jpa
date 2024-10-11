@@ -46,4 +46,15 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/coverpage/{id}")
+    public ResponseEntity<BookCoverPage> getBookCoverPageById(@PathVariable Long id) {
+        BookCoverPage bookCoverPage = bookServiceImpl.getBookCoverPageById(id);
+        if (bookCoverPage != null) {
+            return ResponseEntity.ok(bookCoverPage);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
