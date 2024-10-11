@@ -1,5 +1,7 @@
 package com.example.sjpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class Book {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_cover_page_id")
+    @JsonManagedReference
     private BookCoverPage bookCoverPage;
 
     public Long getId() {
@@ -37,5 +40,8 @@ public class Book {
 
     public void setBookCoverPage(BookCoverPage bookCoverPage) {
         this.bookCoverPage = bookCoverPage;
+        if (bookCoverPage != null) {
+            bookCoverPage.setBook(this);
+        }
     }
 }

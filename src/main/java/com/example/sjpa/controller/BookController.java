@@ -1,14 +1,13 @@
 package com.example.sjpa.controller;
 
-import java.util.List;
-
+import com.example.sjpa.entity.Book;
+import com.example.sjpa.entity.BookCoverPage;
+import com.example.sjpa.service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sjpa.service.BookServiceImpl;
-import com.example.sjpa.entity.Book;
-import com.example.sjpa.entity.BookCoverPage;
+import java.util.List;
 
 @RestController
 @RequestMapping("/books")
@@ -17,12 +16,9 @@ public class BookController {
     @Autowired
     private BookServiceImpl bookServiceImpl;
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        BookCoverPage bookCoverPage = new BookCoverPage();
-        bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg");
-
-        Book savedBook = bookServiceImpl.createBookWithCover(book, bookCoverPage);
+        Book savedBook = bookServiceImpl.createBook(book);
         return ResponseEntity.ok(savedBook);
     }
 
@@ -31,12 +27,12 @@ public class BookController {
         Book book = bookServiceImpl.getBookById(id);
         return ResponseEntity.ok(book);
     }
-    
+
     @GetMapping("")
     public List<Book> getAllBooks() {
         return bookServiceImpl.getAllBooks();
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         boolean isDeleted = bookServiceImpl.deleteBook(id);
@@ -45,5 +41,14 @@ public class BookController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/coverpage/{id}/book")
+    public ResponseEntity<Book> getBookFromCoverPage(@PathVariable Long id) {
+        BookCoverPage coverPage = bookServiceImpl.getBookCoverPageById(id);
+        if (coverPage != null && coverPage.getBook() != null) {
+            return ResponseEntity.ok(coverPage.getBook());
+        }
+        return ResponseEntity.notFound().build();
     }
 }

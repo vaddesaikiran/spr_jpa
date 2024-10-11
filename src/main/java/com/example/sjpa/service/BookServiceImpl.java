@@ -1,6 +1,5 @@
 package com.example.sjpa.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,36 +9,37 @@ import com.example.sjpa.entity.Book;
 import com.example.sjpa.entity.BookCoverPage;
 import com.example.sjpa.repository.BookCoverPageRepository;
 import com.example.sjpa.repository.BookRepository;
-
+  
 @Service
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl {
 
-    @Autowired
-    private BookRepository bookRepository;
-    
-    @Autowired
-    private BookCoverPageRepository bookCoverPageRepository;
+        @Autowired
+        private BookRepository bookRepository;
 
-    public Book createBookWithCover(Book book, BookCoverPage bookCoverPage) {
-        BookCoverPage savedCoverPage = bookCoverPageRepository.save(bookCoverPage);
-        book.setBookCoverPage(savedCoverPage);
-        return bookRepository.save(book);
-    }
+        @Autowired
+        private BookCoverPageRepository bookCoverPageRepository;
 
-
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElse(null);
-    }
-    
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
-    }
-    
-    public boolean deleteBook(Long id) {
-        if (bookRepository.existsById(id)) {
-            bookRepository.deleteById(id);
-            return true;
+        public Book createBook(Book book) {
+            return bookRepository.save(book);
         }
-        return false;
+
+        public Book getBookById(Long id) {
+            return bookRepository.findById(id).orElse(null);
+        }
+
+        public List<Book> getAllBooks() {
+            return bookRepository.findAll();
+        }
+
+        public boolean deleteBook(Long id) {
+            if (bookRepository.existsById(id)) {
+                bookRepository.deleteById(id);
+                return true;
+            }
+            return false;
+        }
+
+        public BookCoverPage getBookCoverPageById(Long id) {
+            return bookCoverPageRepository.findById(id).orElse(null);
+        }
     }
-}
