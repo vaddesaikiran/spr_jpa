@@ -11,7 +11,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "book_cover_page_id")
     private BookCoverPage bookCoverPage;
 
