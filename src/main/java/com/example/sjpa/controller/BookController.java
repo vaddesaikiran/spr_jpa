@@ -19,12 +19,19 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        BookCoverPage bookCoverPage = new BookCoverPage();
-        bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg");
+        BookCoverPage bookCoverPage = book.getBookCoverPage();
 
+        // If no cover page is provided, set a default cover image URL
+        if (bookCoverPage == null || bookCoverPage.getCoverImageUrl() == null) {
+            bookCoverPage = new BookCoverPage();
+            bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg"); // Default URL
+        }
+
+        // Save the book with the provided or default cover page
         Book savedBook = bookServiceImpl.createBookWithCover(book, bookCoverPage);
         return ResponseEntity.ok(savedBook);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {

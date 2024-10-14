@@ -21,8 +21,8 @@ public class BookServiceImpl implements BookService{
     private BookCoverPageRepository bookCoverPageRepository;
 
     public Book createBookWithCover(Book book, BookCoverPage bookCoverPage) {
-        BookCoverPage savedCoverPage = bookCoverPageRepository.save(bookCoverPage);
-        book.setBookCoverPage(savedCoverPage);
+//        BookCoverPage savedCoverPage = bookCoverPageRepository.save(bookCoverPage);
+        book.setBookCoverPage(bookCoverPage);
         return bookRepository.save(book);
     }
 
@@ -45,8 +45,5 @@ public class BookServiceImpl implements BookService{
     
     public BookCoverPage getBookCoverPageById(Long id) {
         return bookCoverPageRepository.findById(id).orElse(null);
-    }
-
-    
-    
+    }  
 }
