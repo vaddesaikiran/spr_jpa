@@ -11,7 +11,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "book_cover_page_id")
     private BookCoverPage bookCoverPage;
 
