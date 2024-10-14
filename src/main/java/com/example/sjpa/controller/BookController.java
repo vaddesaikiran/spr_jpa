@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sjpa.service.BookServiceImpl;
 import com.example.sjpa.entity.Book;
 import com.example.sjpa.entity.BookCoverPage;
+import com.example.sjpa.service.BookServiceImpl;
 
 @RestController
 @RequestMapping("/books")
@@ -17,6 +17,7 @@ public class BookController {
     @Autowired
     private BookServiceImpl bookServiceImpl;
 
+    // Create a book with optional cover page
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         BookCoverPage bookCoverPage = book.getBookCoverPage();
@@ -27,23 +28,24 @@ public class BookController {
             bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg"); // Default URL
         }
 
-        // Save the book with the provided or default cover page
         Book savedBook = bookServiceImpl.createBookWithCover(book, bookCoverPage);
         return ResponseEntity.ok(savedBook);
     }
 
-
+    // Get book by ID
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         Book book = bookServiceImpl.getBookById(id);
         return ResponseEntity.ok(book);
     }
-    
+
+    // Get all books
     @GetMapping("")
     public List<Book> getAllBooks() {
         return bookServiceImpl.getAllBooks();
     }
-    
+
+    // Delete book by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         boolean isDeleted = bookServiceImpl.deleteBook(id);
@@ -53,7 +55,15 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Remove book cover page
+    @PutMapping("/{id}/removecover")
+    public ResponseEntity<Book> removeBookCover(@PathVariable Long id) {
+        Book updatedBook = bookServiceImpl.removeBookCover(id);
+        return ResponseEntity.ok(updatedBook);
+    }
     
+    // Get cover page by ID
     @GetMapping("/coverpage/{id}")
     public ResponseEntity<BookCoverPage> getBookCoverPageById(@PathVariable Long id) {
         BookCoverPage bookCoverPage = bookServiceImpl.getBookCoverPageById(id);
@@ -63,5 +73,4 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -11,7 +12,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH,CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH}, orphanRemoval = true)
     @JoinColumn(name = "book_cover_page_id")
     private BookCoverPage bookCoverPage;
 

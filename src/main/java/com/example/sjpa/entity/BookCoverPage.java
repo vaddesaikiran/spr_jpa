@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 public class BookCoverPage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +27,4 @@ public class BookCoverPage {
     public void setCoverImageUrl(String coverImageUrl) {
         this.coverImageUrl = coverImageUrl;
     }
-
 }
-
