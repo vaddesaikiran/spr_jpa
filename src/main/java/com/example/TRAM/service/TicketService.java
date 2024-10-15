@@ -28,6 +28,7 @@ public class TicketService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
+    @Transactional
     public void bookTicket(UserInfo userInfo, Tickets ticket, Payments payment) {
         // Save ticket first
         logger.info("Saving ticket information...");
