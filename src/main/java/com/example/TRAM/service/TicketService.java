@@ -30,7 +30,7 @@ public class TicketService {
 
     @Transactional
     public void bookTicket(Tickets ticket, Payments payment) {
-        // Save ticket first
+        // Save the ticket
         logger.info("Saving ticket information...");
         Tickets savedTicket = ticketsRepository.save(ticket);
         logger.info("Saved ticket: {}", savedTicket.getTicketId());
@@ -39,9 +39,10 @@ public class TicketService {
         BankAccount account = bankAccountRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Bank account not found"));
 
+        // Check if the account has sufficient balance
         if (account.getBalance() < payment.getAmount()) {
             logger.error("Insufficient funds for user: {}", ticket.getUsername());
-            throw new RuntimeException("Insufficient funds");
+            throw new RuntimeException("Insufficient funds");  // Exception triggers rollback
         }
 
         // Deduct balance from the account
@@ -49,10 +50,10 @@ public class TicketService {
         account.setBalance(account.getBalance() - payment.getAmount());
         bankAccountRepository.save(account);
 
-        // Save payment transaction
+        // Save payment transaction after successful balance deduction
         payment.setTransactionId(payment.getTransactionId());  // Ensure the transaction ID is set
         logger.info("Saving payment information...");
-        paymentsRepository.save(payment);
+        paymentsRepository.save(payment);  // Payment saved only if all steps succeed
         logger.info("Payment recorded with Transaction ID: {}", payment.getTransactionId());
     }
 }

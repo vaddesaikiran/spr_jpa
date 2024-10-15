@@ -48,8 +48,8 @@ public class TicketController {
             logger.info("Ticket booked successfully! Ticket ID: {}", ticket.getTicketId());
             return ResponseEntity.ok("Ticket booked successfully! Ticket ID: " + ticket.getTicketId());
         } catch (RuntimeException e) {
-            payment.setStatus("FAILURE");
-            paymentsRepository.save(payment);  // Save the failed payment status
+//            payment.setStatus("FAILURE");
+//            paymentsRepository.save(payment);  // Save the failed payment status
             logger.error("Error booking ticket: {}", e.getMessage());
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }

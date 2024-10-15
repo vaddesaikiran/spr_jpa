@@ -12,7 +12,6 @@ public class Tickets {
 
     @Column(unique = true, nullable = false)
     private String ticketId;  // Unique ticket ID
-
     private String username;  // Username of the person booking the ticket
     private String startPlace;  // Starting place
     private String destination;  // Destination
