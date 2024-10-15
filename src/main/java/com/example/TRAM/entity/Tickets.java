@@ -13,7 +13,10 @@ public class Tickets {
     @Column(unique = true, nullable = false)
     private String ticketId;  // Unique ticket ID
 
-    private String username;  // Username of the person booking the ticket
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserInfo userInfo;  // Reference to the UserInfo entity
+
     private String startPlace;  // Starting place
     private String destination;  // Destination
     private double price;  // Price of the ticket
@@ -31,7 +34,6 @@ public class Tickets {
     }
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -48,12 +50,12 @@ public class Tickets {
         this.ticketId = ticketId;
     }
 
-    public String getUsername() {
-        return username;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public String getStartPlace() {

@@ -1,6 +1,7 @@
 package com.example.TRAM.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class UserInfo {
@@ -15,8 +16,13 @@ public class UserInfo {
     private String gender;
     private int age;
 
-    // Getters and Setters
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private BankAccount bankAccount;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<Tickets> tickets;
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -47,5 +53,21 @@ public class UserInfo {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public List<Tickets> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Tickets> tickets) {
+        this.tickets = tickets;
     }
 }

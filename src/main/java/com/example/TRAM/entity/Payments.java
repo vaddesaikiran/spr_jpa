@@ -13,8 +13,12 @@ public class Payments {
     @Column(unique = true, nullable = false)
     private String transactionId;  // Unique transaction ID
 
-    private String status;  // Transaction status (Debit/Credit)
+    private String status;  // Transaction status (PENDING, SUCCESS, FAILURE)
     private double amount;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserInfo userInfo;
 
     // Constructor
     public Payments() {
@@ -27,7 +31,6 @@ public class Payments {
     }
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -59,4 +62,13 @@ public class Payments {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+    
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+    
 }

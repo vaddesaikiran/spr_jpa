@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.TRAM.entity.Payments;
 import com.example.TRAM.entity.Tickets;
+import com.example.TRAM.entity.UserInfo;
 import com.example.TRAM.repository.PaymentsRepository;
+import com.example.TRAM.repository.UserInfoRepository;
 import com.example.TRAM.service.TicketService;
 
 // Main controller for ticket operations
@@ -22,13 +24,19 @@ public class TicketController {
     private TicketService ticketService;
 
     @Autowired
-    private PaymentsRepository paymentsRepository; // Inject the payment repository
+    private PaymentsRepository paymentsRepository;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     // Endpoint to buy tickets
     @PostMapping("/buy")
     public ResponseEntity<String> buyTicket(@RequestBody BuyTicketRequest request) {
+        UserInfo userInfo = userInfoRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Tickets ticket = new Tickets();
-        ticket.setUsername(request.getUsername());
+        ticket.setUserInfo(userInfo); // Set user information for the ticket
         ticket.setStartPlace(request.getStartPlace());
         ticket.setDestination(request.getDestination());
         ticket.setPrice(request.getPrice());
@@ -39,7 +47,7 @@ public class TicketController {
 
         try {
             logger.info("Attempting to book ticket for user: {}", request.getUsername());
-            ticketService.bookTicket(ticket, payment);  // Call the service method
+            ticketService.bookTicket(userInfo, ticket, payment);  // Call the service method
 
             // Update payment status after successful ticket booking
             payment.setStatus("SUCCESS");
@@ -55,7 +63,6 @@ public class TicketController {
         }
     }
 }
-
 
 // DTO for buying a ticket
 class BuyTicketRequest {

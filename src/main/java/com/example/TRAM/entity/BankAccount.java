@@ -14,8 +14,11 @@ public class BankAccount {
 
     private double balance;
 
-    // Getters and Setters
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserInfo userInfo; // Reference to the UserInfo entity
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class BankAccount {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 }
