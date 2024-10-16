@@ -13,9 +13,6 @@ public class UserInfo {
     @Column(unique = true, nullable = false)
     private String username;  // Unique username
 
-    private String gender;
-    private int age;
-
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private BankAccount bankAccount;
 
@@ -37,22 +34,6 @@ public class UserInfo {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public BankAccount getBankAccount() {

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.TRAM.entity.BankAccount;
 import com.example.TRAM.entity.Payments;
@@ -28,7 +27,6 @@ public class TicketService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
-    @Transactional
     public void bookTicket(UserInfo userInfo, Tickets ticket, Payments payment) {
         // Save ticket first
         logger.info("Saving ticket information...");
