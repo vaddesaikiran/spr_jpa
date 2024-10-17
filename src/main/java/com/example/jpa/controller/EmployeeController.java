@@ -1,22 +1,21 @@
 package com.example.jpa.controller;
 
+import com.example.jpa.projection.EmployeeProjection;
+import com.example.jpa.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.jpa.entity.Employee;
-import com.example.jpa.service.EmployeeService;
 
 import java.util.List;
 
 @RestController
 public class EmployeeController {
 
-	@Autowired
+    @Autowired
     private EmployeeService employeeService;
-    
+
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees() {
+    public List<EmployeeProjection> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 }
