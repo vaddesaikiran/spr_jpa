@@ -17,7 +17,7 @@ public class AccountController {
     public String transferMoney(@RequestParam Long fromAccountId,
                                 @RequestParam Long toAccountId,
                                 @RequestParam Double amount) {
-        accountService.transferMoneyWithDelay(fromAccountId, toAccountId, amount);
+        accountService.transferMoneyWithOptimisticLock(fromAccountId, toAccountId, amount);
         return "Money transferred successfully!";
     }
 }

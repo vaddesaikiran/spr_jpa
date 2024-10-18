@@ -1,7 +1,7 @@
 package com.example.locking_mechanisms.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,34 +14,32 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     @Transactional
-    public void transferMoneyWithDelay(Long fromAccountId, Long toAccountId, Double amount) {
-        // Fetch the "from" account with pessimistic write lock
-        Account fromAccount = accountRepository.findByIdWithPessimisticWriteLock(fromAccountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-
-        // Fetch the "to" account
-        Account toAccount = accountRepository.findById(toAccountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-
-        // Perform the transfer
-        if (fromAccount.getBalance() < amount) {
-            throw new RuntimeException("Insufficient funds");
-        }
-        fromAccount.setBalance(fromAccount.getBalance() - amount);
-        toAccount.setBalance(toAccount.getBalance() + amount);
-
-        // Save the updated accounts
-        accountRepository.save(fromAccount);
-        accountRepository.save(toAccount);
-
-        // Simulate delay to hold the lock for testing purposes
+    public void transferMoneyWithOptimisticLock(Long fromAccountId, Long toAccountId, Double amount) {
         try {
-            System.out.println("Simulating delay for pessimistic lock...");
-            Thread.sleep(10000);  // 10 seconds delay
+            Account fromAccount = accountRepository.findByIdWithOptimisticLock(fromAccountId)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            Thread.sleep(10000);
+
+            Account toAccount = accountRepository.findById(toAccountId)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            if (fromAccount.getBalance() < amount) {
+                throw new RuntimeException("Insufficient funds");
+            }
+            fromAccount.setBalance(fromAccount.getBalance() - amount);
+            toAccount.setBalance(toAccount.getBalance() + amount);
+
+            accountRepository.save(fromAccount);
+            accountRepository.save(toAccount);
+
+            System.out.println("Transaction completed.");
+        } catch (ObjectOptimisticLockingFailureException e) {
+            System.out.println("Optimistic lock failure: another transaction has updated this account.");
+            throw e;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            throw new RuntimeException("Transfer interrupted", e);
         }
-
-        System.out.println("Transaction completed.");
     }
 }
