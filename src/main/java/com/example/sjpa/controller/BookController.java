@@ -21,13 +21,11 @@ public class BookController {
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         BookCoverPage bookCoverPage = book.getBookCoverPage();
 
-        // If no cover page is provided, set a default cover image URL
         if (bookCoverPage == null || bookCoverPage.getCoverImageUrl() == null) {
             bookCoverPage = new BookCoverPage();
-            bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg"); // Default URL
+            bookCoverPage.setCoverImageUrl("https://example.com/cover.jpg");
         }
 
-        // Save the book with the provided or default cover page
         Book savedBook = bookServiceImpl.createBookWithCover(book, bookCoverPage);
         return ResponseEntity.ok(savedBook);
     }
