@@ -24,4 +24,9 @@ public class PostService {
     public List<Post> getPostsByUserId(Long userId) {
         return postRepository.findByUserId(userId);
     }
+
+    // Dynamic query using Criteria API
+    public List<Post> findPostsByDynamicCriteria(String title, Long userId) {
+        return postRepository.findPostsByDynamicCriteria(title, userId);
+    }
 }

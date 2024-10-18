@@ -2,9 +2,6 @@ package com.example.ldq.controller;
 
 import com.example.ldq.entity.Post;
 import com.example.ldq.service.PostService;
-
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +19,7 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-    
     @GetMapping("/{id}")
-    @Transactional
     public Post getPostById(@PathVariable Long id) {
         Post post = postService.getPostById(id);
         if (post != null) {
@@ -33,9 +28,17 @@ public class PostController {
         return post;
     }
 
-
     @GetMapping("/user/{userId}")
     public List<Post> getPostsByUserId(@PathVariable Long userId) {
         return postService.getPostsByUserId(userId);
+    }
+
+ 
+    @GetMapping("/search")
+    public List<Post> searchPosts(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Long userId
+    ) {
+        return postService.findPostsByDynamicCriteria(title, userId);
     }
 }
