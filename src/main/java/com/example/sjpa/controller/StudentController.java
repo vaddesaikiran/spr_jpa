@@ -6,6 +6,7 @@ import com.example.sjpa.service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class StudentController {
     }
     
     
-    @GetMapping("/paged-sorted")
+    @GetMapping("/page-sorted")
     public ResponseEntity<Page<Student>> getAllStudentsPagedAndSorted(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -51,6 +52,14 @@ public class StudentController {
                 : Sort.by(sortField).descending();
 
         Page<Student> students = studentService.getAllStudents(PageRequest.of(page, size, sort));
+        return ResponseEntity.ok(students);
+    }
+    
+    @GetMapping("/slice")
+    public ResponseEntity<Slice<Student>> getAllStudentsSlice(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Slice<Student> students = studentService.getAllStudentsSlice(PageRequest.of(page, size));
         return ResponseEntity.ok(students);
     }
     
