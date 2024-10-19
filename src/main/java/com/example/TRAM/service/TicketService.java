@@ -37,6 +37,19 @@ public class TicketService {
         ticket.setUserInfo(userInfo);
         Tickets savedTicket = ticketsRepository.save(ticket);
         logger.info("Saved ticket: {} with ID: {}", savedTicket.getTicketId(), savedTicket.getId());
+        
+        Tickets retrievedTicket = getTicketDetails(savedTicket.getTicketId());
+        logger.info("Retrieved ticket details within transaction: {} (Ticket ID: {})", retrievedTicket, retrievedTicket.getTicketId());
+
+        
+        
+        try {
+            logger.info("Simulating delay before completing the transaction...");
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            logger.error("Thread sleep interrupted: {}", e.getMessage());
+            Thread.currentThread().interrupt();
+        }
 
         try {
             processPayment(userInfo, payment);
