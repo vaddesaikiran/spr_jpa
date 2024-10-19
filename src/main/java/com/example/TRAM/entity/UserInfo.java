@@ -3,23 +3,27 @@ package com.example.TRAM.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class UserInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Unique ID for each user
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;  // Unique username
+    private String username;
 
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private BankAccount bankAccount;
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Tickets> tickets;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

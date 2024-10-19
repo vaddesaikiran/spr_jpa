@@ -1,5 +1,7 @@
 package com.example.TRAM.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,18 +9,18 @@ public class BankAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Unique ID for each bank account
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String accountNumber;  // Unique account number
+    private String accountNumber;
 
     private double balance;
 
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
-    private UserInfo userInfo; // Reference to the UserInfo entity
+    private UserInfo userInfo;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

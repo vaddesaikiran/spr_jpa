@@ -3,37 +3,39 @@ package com.example.TRAM.entity;
 import jakarta.persistence.*;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Tickets {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Unique ID for each ticket
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String ticketId;  // Unique ticket ID
+    private String ticketId;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
-    private UserInfo userInfo;  // Reference to the UserInfo entity
+    private UserInfo userInfo;
 
-    private String startPlace;  // Starting place
-    private String destination;  // Destination
-    private double price;  // Price of the ticket
+    private String startPlace;
+    private String destination;
+    private double price;
 
-    // Constructor
     public Tickets() {
-        this.ticketId = generateTicketId();  // Generate a random ticket ID
+        this.ticketId = generateTicketId();
     }
 
-    // Method to generate a random ticket ID (5-6 digits)
+
     private String generateTicketId() {
         Random random = new Random();
-        int ticketIdValue = 10000 + random.nextInt(900000); // Generates a number between 10000 and 999999
-        return String.valueOf(ticketIdValue);  // Convert to String
+        int ticketIdValue = 10000 + random.nextInt(900000);
+        return String.valueOf(ticketIdValue);
     }
 
-    // Getters and Setters
+   
     public Long getId() {
         return id;
     }

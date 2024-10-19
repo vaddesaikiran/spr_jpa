@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.TRAM.entity.BankAccount;
 import com.example.TRAM.entity.Payments;
 import com.example.TRAM.entity.Tickets;
 import com.example.TRAM.entity.UserInfo;
-import com.example.TRAM.repository.PaymentsRepository;
 import com.example.TRAM.repository.UserInfoRepository;
 import com.example.TRAM.service.TicketService;
 
-// Main controller for ticket operations
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
@@ -24,54 +23,61 @@ public class TicketController {
     private TicketService ticketService;
 
     @Autowired
-    private PaymentsRepository paymentsRepository;
-
-    @Autowired
     private UserInfoRepository userInfoRepository;
 
-    // Endpoint to buy tickets
     @PostMapping("/buy")
     public ResponseEntity<String> buyTicket(@RequestBody BuyTicketRequest request) {
         UserInfo userInfo = userInfoRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Tickets ticket = new Tickets();
-        ticket.setUserInfo(userInfo); // Set user information for the ticket
+        ticket.setUserInfo(userInfo);
         ticket.setStartPlace(request.getStartPlace());
         ticket.setDestination(request.getDestination());
         ticket.setPrice(request.getPrice());
 
         Payments payment = new Payments();
         payment.setAmount(request.getPrice());
-        payment.setStatus("PENDING");  // Set initial status to PENDING
+        payment.setStatus("PENDING");
 
         try {
             logger.info("Attempting to book ticket for user: {}", request.getUsername());
-            ticketService.bookTicket(userInfo, ticket, payment);  // Call the service method
+            ticketService.bookTicket(userInfo, ticket, payment);
 
-            // Update payment status after successful ticket booking
-            payment.setStatus("SUCCESS");
-            paymentsRepository.save(payment);  // Save the updated payment to the database
-
-            logger.info("Ticket booked successfully! Ticket ID: {}", ticket.getTicketId());
-            return ResponseEntity.ok("Ticket booked successfully! Ticket ID: " + ticket.getTicketId());
+            if (payment.getStatus().equals("SUCCESS")) {
+                logger.info("Ticket booked successfully! Ticket ID: {}", ticket.getTicketId());
+                return ResponseEntity.ok("Ticket booked successfully! Ticket ID: " + ticket.getTicketId());
+            } else {
+                logger.warn("Ticket saved with ID: {} but payment failed.", ticket.getTicketId());
+                return ResponseEntity.ok("Ticket saved successfully! Ticket ID: " + ticket.getTicketId() + ". Payment failed.");
+            }
         } catch (RuntimeException e) {
-            payment.setStatus("FAILURE");
-            paymentsRepository.save(payment);  // Save the failed payment status
             logger.error("Error booking ticket: {}", e.getMessage());
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
+    
+    
+    @GetMapping("/getTicket/{ticketId}")
+    public ResponseEntity<Tickets> getTicket(@PathVariable String ticketId) {
+        try {
+            Tickets ticket = ticketService.getTicketDetails(ticketId);
+            return ResponseEntity.ok(ticket);
+        } catch (RuntimeException e) {
+            logger.error("Error fetching ticket details: {}", e.getMessage());
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+    
 }
 
-// DTO for buying a ticket
+
 class BuyTicketRequest {
     private String username;
     private String startPlace;
     private String destination;
     private double price;
 
-    // Getters and Setters
     public String getUsername() {
         return username;
     }
