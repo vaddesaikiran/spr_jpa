@@ -21,6 +21,10 @@ public class EmployeeService {
  }
 
  public Employee getEmployeeById(Long id) {
+	 
+	 if (id <= 0) {
+         throw new IllegalArgumentException("Invalid employee ID: " + id);
+     }
      return employeeRepository.findById(id).orElse(null);
  }
 }
