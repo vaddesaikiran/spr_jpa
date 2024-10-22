@@ -13,9 +13,12 @@ public class EmployeeService {
  private EmployeeRepository employeeRepository;
 
  public void addEmployee(Employee employee) {
+     if (employee.getSalary() < 0) {
+         throw new IllegalArgumentException("Salary cannot be negative");
+     }
      employeeRepository.save(employee);
  }
-
+ 
  public List<Employee> getAllEmployees() {
      return employeeRepository.findAll();
  }
@@ -27,4 +30,21 @@ public class EmployeeService {
      }
      return employeeRepository.findById(id).orElse(null);
  }
+ 
+ 
+ public void updateEmployee(Long id, Employee updatedEmployee) {
+     if (updatedEmployee.getSalary() < 0) {
+         throw new IllegalArgumentException("Salary cannot be negative.");
+     }
+     Employee existingEmployee = getEmployeeById(id);
+     if (existingEmployee == null) {
+         throw new IllegalArgumentException("Employee not found with ID: " + id);
+     }
+     existingEmployee.setName(updatedEmployee.getName());
+     existingEmployee.setDepartment(updatedEmployee.getDepartment());
+     existingEmployee.setRole(updatedEmployee.getRole());
+     existingEmployee.setSalary(updatedEmployee.getSalary());
+     employeeRepository.save(existingEmployee);
+ }
+ 
 }
