@@ -11,12 +11,12 @@ import org.slf4j.LoggerFactory;
 public class LoggingAspect {
  private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
- @Before("execution(* com.example.employeemanagement.service.EmployeeService.*(..))")
+ @Before("execution(* com.example.employeemanagement.service.EmployeeService.getAllEmployees(..))")
  public void logBefore(JoinPoint joinPoint) {
      logger.info("Entering method: {}", joinPoint.getSignature().getName());
  }
 
- @After("execution(* com.example.employeemanagement.service.EmployeeService.*(..))")
+ @After("execution(* com.example.employeemanagement.service.EmployeeService.getAllEmployees(..))")
  public void logAfter(JoinPoint joinPoint) {
      logger.info("Exiting method: {}", joinPoint.getSignature().getName());
  }
